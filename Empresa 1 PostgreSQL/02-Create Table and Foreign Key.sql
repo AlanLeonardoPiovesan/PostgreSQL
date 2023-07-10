@@ -1,0 +1,78 @@
+-- TABELA TAMANHOS
+CREATE TABLE Tamanhos (
+  Tamanho_ID SERIAL PRIMARY KEY,
+  Tamanho_Descricao VARCHAR(50) NOT NULL
+);
+
+-- TABELA GRADES
+CREATE TABLE Grades (
+  Grade_ID SERIAL PRIMARY KEY,
+  Grade_Descricao VARCHAR(50) NOT NULL
+);
+
+-- TABELA GRADES_TAMANHOS
+CREATE TABLE Grades_Tamanhos (
+  GraTam_ID SERIAL PRIMARY KEY,
+  Grade_ID INT NOT NULL,
+  Tamanho_ID INT NOT NULL,
+  FOREIGN KEY (Grade_ID) REFERENCES Grades (Grade_ID),
+  FOREIGN KEY (Tamanho_ID) REFERENCES Tamanhos (Tamanho_ID)
+);
+
+-- TABELA GRUPOS
+CREATE TABLE Grupos (
+  Grupo_ID SERIAL PRIMARY KEY,
+  Grupo_Descricao VARCHAR(50) NOT NULL
+);
+
+-- TABELA SUBGRUPOS
+CREATE TABLE SubGrupos (
+  SubGrupo_ID SERIAL PRIMARY KEY,
+  SubGrupo_Descricao VARCHAR(50) NOT NULL
+);
+
+-- TABELA GRUPOS_SUBGRUPOS
+CREATE TABLE Grupos_SubGrupos (
+  GruSub_ID SERIAL PRIMARY KEY,
+  Grupo_ID INT NOT NULL,
+  SubGrupo_ID INT NOT NULL,
+  FOREIGN KEY (Grupo_ID) REFERENCES Grupos (Grupo_ID),
+  FOREIGN KEY (SubGrupo_ID) REFERENCES SubGrupos (SubGrupo_ID)
+);
+
+-- TABELA TABELAS
+CREATE TABLE Tabelas (
+  Tabela_ID SERIAL PRIMARY KEY,
+  Tabela_Descricao VARCHAR(50) NOT NULL
+);
+
+-- TABELA TABELAS_VALORES
+CREATE TABLE Tabelas_Valores (
+  Valor_ID SERIAL PRIMARY KEY,
+  Produto_ID INT NOT NULL,
+  Tabela_ID INT NOT NULL,
+  Valor_Venda NUMERIC(10,2) NOT NULL,
+  FOREIGN KEY (Tabela_ID) REFERENCES Tabelas (Tabela_ID)
+);
+
+-- TABELA ESTOQUES_GRADES
+CREATE TABLE Estoques_Grades (
+  EstGra_ID SERIAL PRIMARY KEY,
+  GraTam_ID INT NOT NULL,
+  EstGra_Quantidade INT NOT NULL,
+  FOREIGN KEY (GraTam_ID) REFERENCES Grades_Tamanhos (GraTam_ID)
+);
+
+-- TABELA PRODUTOS
+CREATE TABLE Produtos (
+  Produto_ID SERIAL PRIMARY KEY,
+  Produto_Descricao VARCHAR(50) NOT NULL,
+  GruSub_ID INT NOT NULL,
+  GraTam_ID INT NOT NULL,
+  Valor_ID INT NOT NULL,
+  EstGra_ID INT NOT NULL,
+  FOREIGN KEY (GruSub_ID) REFERENCES Grupos_SubGrupos (GruSub_ID),
+  FOREIGN KEY (GraTam_ID) REFERENCES Grades_Tamanhos (GraTam_ID),
+  FOREIGN KEY (Valor_ID) REFERENCES Tabelas_Valores (Valor_ID),
+  FOREIGN KEY (EstGra_ID) REFERENCES Estoques_Grades (EstGra_ID)
+);
